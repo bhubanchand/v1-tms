@@ -1,98 +1,163 @@
-import { CheckSquare, Filter, Plus, Calendar, AlertCircle } from "lucide-react";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
+"use client";
+
+import * as React from "react";
+import { Plus, Check, Calendar, Filter } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { EmptyState } from "@/components/ui/empty-state";
+import { cn } from "@/lib/utils";
+
+interface Task {
+  id: string;
+  title: string;
+  project: string;
+  priority: "Low" | "Medium" | "High" | "Urgent";
+  due: string;
+  completed: boolean;
+}
+
+const INITIAL_TASKS: Task[] = [
+  {
+    id: "TSK-101",
+    title: "Review multi-tenant database migration scripts",
+    project: "Core Infrastructure",
+    priority: "Urgent",
+    due: "Today",
+    completed: false,
+  },
+  {
+    id: "TSK-102",
+    title: "Audit RLS policies for cross-tenant isolation",
+    project: "Security Architecture",
+    priority: "High",
+    due: "Tomorrow",
+    completed: false,
+  },
+  {
+    id: "TSK-103",
+    title: "Establish mobile navigation touch targets (min 44px)",
+    project: "Design System",
+    priority: "Medium",
+    due: "Sep 12",
+    completed: false,
+  },
+  {
+    id: "TSK-104",
+    title: "Configure .env.example placeholders for Supabase",
+    project: "DevOps",
+    priority: "Low",
+    due: "Sep 15",
+    completed: true,
+  },
+];
 
 export default function MyWorkPage() {
-  const MOCK_TASKS = [
-    {
-      id: "TSK-101",
-      title: "Review multi-tenant database migration scripts",
-      project: "Core Infrastructure",
-      priority: "Urgent",
-      due: "Today",
-      status: "In Progress",
-    },
-    {
-      id: "TSK-102",
-      title: "Audit RLS policies for cross-tenant isolation",
-      project: "Security Architecture",
-      priority: "High",
-      due: "Tomorrow",
-      status: "Todo",
-    },
-    {
-      id: "TSK-103",
-      title: "Establish mobile navigation touch targets (min 44px)",
-      project: "Design System",
-      priority: "Medium",
-      due: "Sep 12",
-      status: "Review",
-    },
-    {
-      id: "TSK-104",
-      title: "Configure .env.example placeholders for Supabase",
-      project: "DevOps",
-      priority: "Low",
-      due: "Sep 15",
-      status: "Completed",
-    },
-  ];
+  const [tasks, setTasks] = React.useState<Task[]>(INITIAL_TASKS);
+  const [filter, setFilter] = React.useState<"all" | "active" | "completed">("all");
+
+  const toggleTask = (id: string) => {
+    setTasks((prev) =>
+      prev.map((t) => (t.id === id ? { ...t, completed: !t.completed } : t))
+    );
+  };
+
+  const filteredTasks = tasks.filter((t) => {
+    if (filter === "active") return !t.completed;
+    if (filter === "completed") return t.completed;
+    return true;
+  });
 
   return (
-    <div className="space-y-6">
+    <div className="max-w-4xl mx-auto space-y-6 animate-in fade-in duration-200">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-3 pb-2 border-b border-border/50">
         <div>
-          <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-foreground">
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">
             My Work
-          </h2>
-          <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">
-            Your personal task queue, priorities, and daily assignments.
+          </h1>
+          <p className="text-xs sm:text-sm text-muted-foreground mt-1">
+            Your personal deliverables, upcoming deadlines, and priorities.
           </p>
         </div>
-        <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm" className="text-xs">
-            <Filter className="h-3.5 w-3.5 mr-1.5" />
-            Filter
-          </Button>
-          <Button size="sm" className="text-xs">
-            <Plus className="h-3.5 w-3.5 mr-1.5" />
-            New Task
-          </Button>
-        </div>
+        <Button size="sm" className="text-xs self-start sm:self-auto">
+          <Plus className="h-3.5 w-3.5 mr-1.5" />
+          New Task
+        </Button>
       </div>
 
-      {/* Task List Card */}
-      <Card>
-        <CardHeader className="pb-3">
-          <div className="flex items-center justify-between">
-            <CardTitle className="text-sm font-semibold">Active Tasks (4)</CardTitle>
-            <span className="text-xs text-muted-foreground">Phase 2 Preview</span>
-          </div>
-          <CardDescription className="text-xs">
-            Task execution engine and status workflows will be implemented in Phase 2.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-2">
-          {MOCK_TASKS.map((task) => (
+      {/* Filter Tabs */}
+      <div className="flex items-center gap-1.5">
+        {(["all", "active", "completed"] as const).map((tab) => (
+          <button
+            key={tab}
+            onClick={() => setFilter(tab)}
+            className={cn(
+              "px-3 py-1.5 text-xs rounded-lg font-medium capitalize transition-all",
+              filter === tab
+                ? "bg-muted text-foreground font-semibold"
+                : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+            )}
+          >
+            {tab === "all" ? `All Tasks (${tasks.length})` : tab}
+          </button>
+        ))}
+      </div>
+
+      {/* Task List */}
+      {filteredTasks.length === 0 ? (
+        <EmptyState
+          title="You're all clear ✨"
+          description={
+            filter === "completed"
+              ? "No completed tasks yet. Check off items as you finish them."
+              : "No active tasks matching your filter."
+          }
+        />
+      ) : (
+        <div className="divide-y divide-border/60 border border-border/60 rounded-xl bg-card overflow-hidden">
+          {filteredTasks.map((task) => (
             <div
               key={task.id}
-              className="flex flex-col sm:flex-row sm:items-center justify-between p-3 rounded-lg border border-border/60 hover:border-primary/40 bg-card transition-all gap-2"
+              onClick={() => toggleTask(task.id)}
+              className={cn(
+                "group flex items-center justify-between p-3.5 transition-colors cursor-pointer select-none",
+                task.completed ? "bg-muted/15 opacity-60" : "hover:bg-muted/40"
+              )}
             >
-              <div className="flex items-start gap-3 min-w-0">
-                <CheckSquare className="h-4 w-4 text-muted-foreground shrink-0 mt-0.5" />
+              <div className="flex items-center gap-3 min-w-0">
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    toggleTask(task.id);
+                  }}
+                  className={cn(
+                    "h-5 w-5 rounded-md border flex items-center justify-center transition-all shrink-0",
+                    task.completed
+                      ? "bg-emerald-500 border-emerald-500 text-white"
+                      : "border-muted-foreground/40 group-hover:border-foreground"
+                  )}
+                  aria-label={`Mark task as ${task.completed ? "incomplete" : "complete"}`}
+                >
+                  {task.completed && <Check className="h-3.5 w-3.5 stroke-[2.5]" />}
+                </button>
+
                 <div className="min-w-0">
-                  <p className="text-xs sm:text-sm font-medium text-foreground truncate">
+                  <p
+                    className={cn(
+                      "text-xs sm:text-sm font-medium tracking-tight truncate",
+                      task.completed ? "line-through text-muted-foreground" : "text-foreground"
+                    )}
+                  >
                     {task.title}
                   </p>
-                  <p className="text-[11px] text-muted-foreground">
+                  <p className="text-[11px] text-muted-foreground mt-0.5">
                     <span className="font-mono">{task.id}</span> · {task.project}
                   </p>
                 </div>
               </div>
 
-              <div className="flex items-center gap-2 self-end sm:self-auto shrink-0">
+              <div className="flex items-center gap-2 shrink-0 ml-3">
                 <Badge
                   variant={
                     task.priority === "Urgent"
@@ -105,18 +170,14 @@ export default function MyWorkPage() {
                 >
                   {task.priority}
                 </Badge>
-                <div className="flex items-center gap-1 text-[11px] text-muted-foreground">
-                  <Calendar className="h-3 w-3" />
-                  <span>{task.due}</span>
-                </div>
-                <Badge variant="outline" className="text-[10px]">
-                  {task.status}
-                </Badge>
+                <span className="text-[11px] text-muted-foreground hidden sm:inline">
+                  {task.due}
+                </span>
               </div>
             </div>
           ))}
-        </CardContent>
-      </Card>
+        </div>
+      )}
     </div>
   );
 }
