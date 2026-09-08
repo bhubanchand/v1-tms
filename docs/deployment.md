@@ -25,10 +25,10 @@ The application requires the following environment variables. Maintain identical
 NEXT_PUBLIC_SUPABASE_URL=https://your-project-id.supabase.co
 
 # Public anonymous key (used for client-side queries protected by RLS)
-NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key_here
 
 # Optional service role key (strictly server-side for administrative tasks, NEVER expose to client)
-# SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+# SUPABASE_SERVICE_ROLE_KEY=your_service_role_key_here
 
 # ==============================================================================
 # APPLICATION SETTINGS

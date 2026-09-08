@@ -79,7 +79,7 @@ export default function ChatPage() {
           </p>
         </div>
         <Badge variant="outline" className="text-xs self-start sm:self-auto">
-          Phase 4 Preview
+          Team Channels
         </Badge>
       </div>
 

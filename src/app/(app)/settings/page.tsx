@@ -64,30 +64,30 @@ export default function SettingsPage() {
           </form>
         </div>
 
-        {/* Security Summary */}
-        <div className="p-5 rounded-xl border border-border/60 bg-card space-y-4">
+        {/* Account Security & Sessions */}
+        <div className="p-5 rounded-2xl border border-border/70 bg-card/75 backdrop-blur-md shadow-2xs space-y-4">
           <div className="flex items-center gap-2">
-            <Shield className="h-4 w-4 text-emerald-500" />
-            <h2 className="text-sm font-semibold text-foreground">Security & Access</h2>
+            <Shield className="h-4 w-4 text-primary" />
+            <h2 className="text-sm font-semibold text-foreground">Security & Login</h2>
           </div>
 
           <div className="space-y-2.5 text-xs">
             <div className="flex items-center justify-between py-1.5 border-b border-border/40">
-              <span className="text-muted-foreground">Tenant Isolation</span>
-              <span className="font-semibold text-emerald-500">Database RLS</span>
-            </div>
-            <div className="flex items-center justify-between py-1.5 border-b border-border/40">
-              <span className="text-muted-foreground">Session Security</span>
-              <span className="font-medium text-foreground">HttpOnly Cookies</span>
-            </div>
-            <div className="flex items-center justify-between py-1.5 border-b border-border/40">
-              <span className="text-muted-foreground">Input Sanitization</span>
+              <span className="text-muted-foreground">Session Status</span>
               <Badge variant="success" className="text-[10px]">Active</Badge>
+            </div>
+            <div className="flex items-center justify-between py-1.5 border-b border-border/40">
+              <span className="text-muted-foreground">Two-Factor Authentication</span>
+              <span className="text-muted-foreground">Not Enabled</span>
+            </div>
+            <div className="flex items-center justify-between py-1.5 border-b border-border/40">
+              <span className="text-muted-foreground">Data Encryption</span>
+              <span className="font-medium text-foreground">TLS 1.3 · AES-256</span>
             </div>
           </div>
 
           <p className="text-[11px] text-muted-foreground leading-relaxed">
-            All data access is verified server-side. Client-supplied organization IDs and roles are never trusted.
+            Manage your personal sign-in credentials, trusted devices, and security notifications.
           </p>
         </div>
       </div>

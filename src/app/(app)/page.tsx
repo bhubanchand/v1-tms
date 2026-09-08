@@ -547,7 +547,7 @@ export default function HomePage() {
               <span>Executive Intelligence Brief</span>
             </div>
             <p className="text-xs sm:text-sm text-foreground leading-relaxed">
-              Engineering is currently bottlenecked by PostgreSQL connection pooling exhaustion during peak writes, which puts the Mobile Shell public pilot at risk for next week. In contrast, the Product Design team has delivered 100% of Phase 0 design tokens ahead of schedule.
+              Engineering is currently bottlenecked by PostgreSQL connection pooling exhaustion during peak writes, which puts the Mobile Shell public pilot at risk for next week. In contrast, the Product Design team has delivered 100% of core design tokens ahead of schedule.
             </p>
           </div>
 
@@ -574,7 +574,7 @@ export default function HomePage() {
                 {
                   id: "RISK-02",
                   title: "Mobile Shell 360px viewport touch target audit",
-                  impact: "1 day overdue · Must pass WCAG AA standards prior to Phase 1",
+                  impact: "1 day overdue · Must pass WCAG AA standards prior to release",
                   owner: "Alex Lee (Engineering Lead)",
                   urgency: "Overdue",
                   variant: "warning",
@@ -695,14 +695,14 @@ export default function HomePage() {
               {[
                 {
                   id: "M-1",
-                  title: "Phase 0 Foundation & Architecture Review",
+                  title: "Design System & Responsive Shell Delivery",
                   scope: "System Architecture, Design Tokens, Security Threat Model",
                   status: "100% Completed",
                   variant: "success",
                 },
                 {
                   id: "M-2",
-                  title: "Phase 1 Auth & Organization Isolation",
+                  title: "Organization Identity & Access Control Rollout",
                   scope: "Supabase RLS, Cookie Auth, Tenant Guards, Invitations",
                   status: "Upcoming",
                   variant: "secondary",

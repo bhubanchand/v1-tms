@@ -25,7 +25,7 @@ export default function InsightsPage() {
           </p>
         </div>
         <Badge variant="outline" className="text-xs self-start sm:self-auto">
-          Phase 6 Preview
+          Weekly Overview
         </Badge>
       </div>
 

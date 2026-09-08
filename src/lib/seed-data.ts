@@ -257,14 +257,14 @@ export const ROLE_DASHBOARDS: Record<OrgRole, RoleDashboardConfig> = {
         items: [
           {
             id: "MIL-01",
-            title: "Phase 0 Shell & System Architecture",
+            title: "Core Design System & Responsive Shell",
             subtitle: "Engineering · 100% Complete",
             badge: "Completed",
             badgeVariant: "success",
           },
           {
             id: "MIL-02",
-            title: "Phase 1 Multi-Tenant Auth & Teams",
+            title: "Organization Identity & Access Control",
             subtitle: "Engineering & Security · Ready for kickoff",
             badge: "Upcoming",
             badgeVariant: "secondary",

@@ -27,7 +27,7 @@ const PROJECTS: Project[] = [
     description: "Responsive 360px+ architecture, 4-layer depth hierarchy, Liquid Glass tokens, and tactile task interactions.",
     progress: 100,
     status: "Completed",
-    healthReason: "All 8 Phase 0 deliverables verified · Production ready",
+    healthReason: "All 8 core deliverables verified · Production ready",
     team: "Product Design",
     tasks: "8/8 Done",
     variant: "success",
@@ -45,7 +45,7 @@ const PROJECTS: Project[] = [
   },
   {
     id: "PRJ-03",
-    title: "Auth & Multi-Tenancy (Phase 1)",
+    title: "Auth & Multi-Tenancy Core",
     description: "Supabase RLS, tenant isolation, role-based access control, and organization invitations.",
     progress: 35,
     status: "In Progress",

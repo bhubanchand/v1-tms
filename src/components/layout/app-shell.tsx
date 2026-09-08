@@ -100,7 +100,7 @@ function AppShellContent({ children }: { children: React.ReactNode }) {
         onOpenChange={setMobileDrawerOpen}
         side="bottom"
         title="Workspace Menu"
-        description="Acme Corp — Multi-tenant TMS"
+        description="Acme Corp Workspace"
       >
         <div className="space-y-4 pb-6">
           {/* Active User Card in Drawer */}
