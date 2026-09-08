@@ -1,0 +1,21 @@
+{
+  "name": "TMS — Task & Team Management System",
+  "short_name": "TMS",
+  "description": "Modern high-performance task and team management system",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#09090b",
+  "theme_color": "#09090b",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
