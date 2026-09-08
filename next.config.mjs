@@ -33,7 +33,7 @@ const securityHeaders = [
       "style-src 'self' 'unsafe-inline'", // unsafe-inline required for Tailwind CSS variables and styled components
       "img-src 'self' blob: data: https:",
       "font-src 'self' data:",
-      "connect-src 'self' https://*.supabase.co wss://*.supabase.co",
+      "connect-src 'self' ws: wss: https: http: https://*.supabase.co wss://*.supabase.co",
       "frame-ancestors 'none'",
       "form-action 'self'",
       "base-uri 'self'",
