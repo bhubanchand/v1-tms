@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { usePathname } from "next/navigation";
-import { Search, Bell, Menu, Check } from "lucide-react";
+import { Search, Bell, Menu, Check, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar } from "@/components/ui/avatar";
 import { ThemeToggle } from "@/components/layout/theme-toggle";
@@ -12,6 +12,7 @@ import { DropdownMenu, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparato
 interface TopbarProps {
   onOpenMobileMenu?: () => void;
   onOpenSearch?: () => void;
+  onQuickCreate?: () => void;
 }
 
 const ROUTE_TITLES: Record<string, string> = {
@@ -24,7 +25,7 @@ const ROUTE_TITLES: Record<string, string> = {
   "/settings": "Workspace Settings",
 };
 
-export function Topbar({ onOpenMobileMenu, onOpenSearch }: TopbarProps) {
+export function Topbar({ onOpenMobileMenu, onOpenSearch, onQuickCreate }: TopbarProps) {
   const pathname = usePathname();
   const currentTitle = ROUTE_TITLES[pathname] || "Workspace";
 
@@ -57,8 +58,20 @@ export function Topbar({ onOpenMobileMenu, onOpenSearch }: TopbarProps) {
         </div>
       </div>
 
-      {/* Right: Search, Notifications, Theme, Profile */}
+      {/* Right: New, Search, Notifications, Theme, Profile */}
       <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+        {/* Desktop Quick New Action */}
+        {onQuickCreate && (
+          <Button
+            size="sm"
+            onClick={onQuickCreate}
+            className="hidden sm:flex items-center gap-1 h-8 px-2.5 text-xs font-medium rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 shadow-xs pressable"
+          >
+            <Plus className="h-3.5 w-3.5" />
+            <span>New</span>
+          </Button>
+        )}
+
         {/* Mobile Search Button */}
         <Button
           variant="ghost"

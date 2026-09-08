@@ -40,11 +40,11 @@ export function Sidebar({ role = "ceo" }: { role?: OrgRole }) {
   };
 
   return (
-    <aside className="hidden md:flex flex-col w-64 h-screen border-r border-border/70 bg-card/60 backdrop-blur-md sticky top-0 shrink-0 select-none">
+    <aside className="hidden md:flex flex-col w-64 h-screen border-r border-border/70 bg-card/75 backdrop-blur-xl sticky top-0 shrink-0 select-none">
       {/* Brand Header */}
       <div className="flex items-center justify-between h-14 px-4 border-b border-border/60">
         <BrandLogo size="md" />
-        <Badge variant="secondary" className="text-[10px] font-semibold uppercase tracking-wider px-1.5 py-0.5">
+        <Badge variant="secondary" className="text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full">
           {role}
         </Badge>
       </div>

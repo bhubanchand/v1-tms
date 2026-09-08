@@ -16,6 +16,7 @@ import {
   Moon,
   Shield,
   ArrowRight,
+  Plus,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -120,6 +121,22 @@ export function CommandPalette({
       category: "Navigation",
       icon: Settings,
       href: "/settings",
+    },
+    {
+      id: "action-new-task",
+      title: "Create New Task",
+      category: "Actions",
+      icon: Plus,
+      shortcut: "C",
+      href: "/my-work",
+    },
+    {
+      id: "action-new-project",
+      title: "Create New Project",
+      category: "Actions",
+      icon: FolderKanban,
+      shortcut: "P",
+      href: "/projects",
     },
     {
       id: "action-theme",

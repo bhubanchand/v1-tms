@@ -95,20 +95,33 @@ The design system implements a mobile-first responsive architecture:
 - **Mobile (< 768px)**:
   - Top header displays current section title, mobile menu trigger, and quick profile avatar.
   - Desktop sidebar is completely hidden (`hidden md:flex`).
-  - Fixed bottom navigation bar (`fixed bottom-0 left-0 right-0 z-40`) renders the 4 core actions (Home, My Work, Projects, Chat) plus a "More" trigger.
-  - The "More" trigger opens a slide-over Sheet containing People, Insights, Settings, and Help.
-  - Content container has bottom padding `pb-20` to prevent bottom nav occlusion.
-  - Safe-area insets (`env(safe-area-inset-bottom)`) ensure compatibility with modern mobile OS home bars.
+  - Floating Liquid Glass dock (`BottomNav`) renders the 4 core actions (Home, My Work, Projects, Chat) plus a "More" trigger.
+  - Floating Quick Create Action Button (`FAB`) positioned in thumb-accessible bottom right zone.
+  - The "More" trigger opens a slide-over Sheet containing People, Insights, and Settings.
+  - Content container has bottom padding (`pb-28`) to prevent dock occlusion.
+  - Safe-area insets (`env(safe-area-inset-bottom)`) ensure compatibility with iOS/Android home bars.
 - **Desktop (>= 768px)**:
-  - Sidebar is persistently visible on the left with clean icons, active indicators, and section grouping.
-  - Bottom navigation bar is hidden (`hidden md:hidden`).
-  - Top header provides search, notifications, organization switcher, and full user dropdown.
+  - Sidebar is persistently visible on the left with Liquid Glass translucency (`backdrop-blur-xl`), active indicators, and section grouping.
+  - Bottom navigation bar is hidden (`md:hidden`).
+  - Top header provides quick search (`Cmd+K`), `+ New` quick action button, notifications, and theme switcher.
+
+### 5.1 4-Layer Depth Hierarchy
+1. **Layer 0 (Canvas)**: Warm neutral mesh background (`bg-background` with ambient radial illumination).
+2. **Layer 1 (Content Surfaces)**: Content cards and page panels with soft border and subtle blur.
+3. **Layer 2 (Elevated Interaction Cards)**: Cards with top inner highlight border and hover lift.
+4. **Layer 3 (Floating Controls)**: Floating mobile dock and Quick Create FAB.
+5. **Layer 4 (Overlays & Task Sheets)**: Slide-over task inspector and command palette.
+
+### 5.2 Task Interaction Architecture (`TaskSheet`)
+- Tapping any task row throughout Home or My Work triggers the interactive `TaskSheet`.
+- Responsive layout: Right-side 420px slide-over on desktop; bottom sheet with drag handle on mobile.
+- Supports immediate inline editing of status, priority, assignee, due date, and notes.
 
 ---
 
 ## 6. Progressive Web App (PWA) Foundation
 
-- Configured `manifest.webmanifest` defining `standalone` display, app icons, theme color (`#09090b` dark, `#ffffff` light), and background color.
+- Configured `manifest.json` defining `standalone` display, app icons, theme color, and background color.
 - Viewport metadata configured with `viewportFit: "cover"` to utilize full edge-to-edge screen real estate on mobile devices.
 - Foundation prepared for future service worker offline asset caching.
 
@@ -116,10 +129,10 @@ The design system implements a mobile-first responsive architecture:
 
 ## 7. Role-Aware Dashboard Architecture
 
-The dashboard supports role-specific content schemas powered by a unified interface:
-- **Employee**: Scoped strictly to personal work items (`My Tasks`, `Due Today`, `Overdue`, `Active Projects`, `Recent Activity`).
-- **Manager**: Scoped to team delivery health (`Team Tasks`, `Team Overdue Work`, `Blocked Work`, `Project Health`, `Team Activity`).
-- **CEO / Admin**: Scoped to organizational macro health (`Company-Level Work`, `Tasks Due This Week`, `Completed Tasks`, `Department & Project Health`, `Executive Milestones`).
+The dashboard supports role-specific content schemas answering *"What matters right now?"*:
+- **Employee**: Scoped strictly to personal work items (`Today's Focus`, `Due Today`, `Overdue`, `Active Projects`) with interactive completion feedback.
+- **Manager**: Scoped to team delivery health (`Engineering Pulse`, `Blocked Work`, `Overdue Work`, `Sprint Projects`).
+- **CEO / Admin**: Scoped to organizational macro health (`Company Pulse`, `Executive Intelligence Digest`, `Needs Executive Attention`, `Strategic Projects with Contextual Health`, `Department Health`, `Milestones`).
 
-### Anti-Surveillance & Deliverable-Based Metrics
-TMS deliberately avoids time tracking, timesheets, keystroke monitoring, and arbitrary capacity scoring. All telemetry represents tangible work units (tasks created, completed, blocked, and milestones achieved). Seed data (`src/lib/seed-data.ts`) models this structure cleanly and is decoupled from production UI components, ensuring seamless transition to PostgreSQL queries in subsequent phases.
+### Anti-Surveillance & Deliverable-Based Metrics Guarantee
+Relay deliberately avoids time tracking, timesheets, keystroke monitoring, and arbitrary capacity scoring. All telemetry represents tangible work units (tasks created, completed, blocked, and milestones achieved). If historical velocity data is insufficient, metrics display `—` or `"Not enough data"`. All developer debug clutter (tenant IDs, architecture debug tags, DB notices) is strictly prohibited from user-facing screens.

@@ -8,13 +8,13 @@ import {
   BarChart3,
   Settings,
   ChevronRight,
-  ShieldCheck,
   Shield,
 } from "lucide-react";
 import { Sidebar } from "@/components/layout/sidebar";
 import { Topbar } from "@/components/layout/topbar";
 import { BottomNav } from "@/components/layout/bottom-nav";
 import { CommandPalette } from "@/components/layout/command-palette";
+import { QuickCreate } from "@/components/layout/quick-create";
 import { Sheet } from "@/components/ui/sheet";
 import { Badge } from "@/components/ui/badge";
 import { Avatar } from "@/components/ui/avatar";
@@ -46,6 +46,7 @@ const MORE_ITEMS = [
 function AppShellContent({ children }: { children: React.ReactNode }) {
   const [mobileDrawerOpen, setMobileDrawerOpen] = React.useState(false);
   const [searchOpen, setSearchOpen] = React.useState(false);
+  const [quickCreateOpen, setQuickCreateOpen] = React.useState(false);
   const pathname = usePathname();
   const { role, setRole } = useCurrentRole();
 
@@ -61,7 +62,7 @@ function AppShellContent({ children }: { children: React.ReactNode }) {
   ];
 
   return (
-    <div className="flex min-h-screen bg-background text-foreground antialiased">
+    <div className="flex min-h-screen bg-background text-foreground antialiased selection:bg-primary/20">
       {/* Desktop Sidebar (Persistent left rail, hidden on mobile) */}
       <Sidebar role={role} />
 
@@ -71,15 +72,19 @@ function AppShellContent({ children }: { children: React.ReactNode }) {
         <Topbar
           onOpenMobileMenu={() => setMobileDrawerOpen(true)}
           onOpenSearch={() => setSearchOpen(true)}
+          onQuickCreate={() => setQuickCreateOpen(true)}
         />
 
         {/* Dynamic Page Content with bottom padding for mobile navigation */}
-        <main className="flex-1 p-4 sm:p-6 lg:p-8 pb-24 md:pb-8 max-w-7xl w-full mx-auto animate-in fade-in duration-200">
+        <main className="flex-1 p-4 sm:p-6 lg:p-8 pb-28 md:pb-8 max-w-7xl w-full mx-auto animate-in fade-in duration-200">
           {children}
         </main>
 
         {/* Mobile Bottom Navigation (Visible only on < 768px screens) */}
         <BottomNav onOpenMore={() => setMobileDrawerOpen(true)} />
+
+        {/* Global Mobile Floating Action Button (FAB) */}
+        <QuickCreate />
       </div>
 
       {/* Command Palette (Cmd+K) */}
@@ -173,12 +178,6 @@ function AppShellContent({ children }: { children: React.ReactNode }) {
                 </Link>
               );
             })}
-          </div>
-
-          {/* Security & Isolation Pill */}
-          <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-muted/40 text-[11px] text-muted-foreground">
-            <ShieldCheck className="h-3.5 w-3.5 text-emerald-500 shrink-0" />
-            <span>Multi-tenant RLS active. Tenant isolated.</span>
           </div>
         </div>
       </Sheet>
