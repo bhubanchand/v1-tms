@@ -1,185 +1,203 @@
+"use client";
+
+import * as React from "react";
 import {
   CheckCircle2,
-  Clock,
+  CalendarClock,
   FolderKanban,
-  Users,
-  ArrowUpRight,
-  ShieldCheck,
+  AlertCircle,
   Building2,
-  Sparkles,
+  ShieldCheck,
+  Shield,
+  Layers,
+  ArrowRight,
 } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { useCurrentRole } from "@/components/providers/role-context";
+import { ROLE_DASHBOARDS, SEED_ORGANIZATION } from "@/lib/seed-data";
+import { cn } from "@/lib/utils";
+import type { OrgRole } from "@/types";
 
 export default function HomePage() {
-  const METRIC_CARDS = [
-    {
-      title: "My Open Tasks",
-      value: "4",
-      change: "+2 this week",
-      icon: CheckCircle2,
-      trend: "positive",
-    },
-    {
-      title: "Active Projects",
-      value: "3",
-      change: "On schedule",
-      icon: FolderKanban,
-      trend: "neutral",
-    },
-    {
-      title: "Hours Logged",
-      value: "32.5h",
-      change: "92% capacity",
-      icon: Clock,
-      trend: "positive",
-    },
-    {
-      title: "Team Members",
-      value: "12",
-      change: "Acme Corp",
-      icon: Users,
-      trend: "neutral",
-    },
+  const { role, setRole } = useCurrentRole();
+  const currentConfig = ROLE_DASHBOARDS[role] || ROLE_DASHBOARDS.ceo;
+
+  const ROLES: { id: OrgRole; label: string }[] = [
+    { id: "employee", label: "Employee" },
+    { id: "manager", label: "Manager" },
+    { id: "ceo", label: "CEO / Admin" },
   ];
+
+  const getMetricIcon = (title: string) => {
+    const t = title.toLowerCase();
+    if (t.includes("completed")) return CheckCircle2;
+    if (t.includes("due") || t.includes("overdue")) return CalendarClock;
+    if (t.includes("project")) return FolderKanban;
+    if (t.includes("blocked") || t.includes("overdue")) return AlertCircle;
+    return Layers;
+  };
 
   return (
     <div className="space-y-6">
-      {/* Welcome Banner */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-5 rounded-2xl border border-border/80 bg-gradient-to-r from-card via-card to-muted/40 shadow-sm">
+      {/* Welcome Banner with Role Perspective Switcher */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-5 rounded-xl border border-border/80 bg-card shadow-sm">
         <div className="space-y-1">
           <div className="flex items-center gap-2">
             <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-foreground">
-              Welcome back, Jane
+              Workspace Overview
             </h2>
             <Badge variant="outline" className="text-[11px] font-mono border-border">
               Phase 0 Foundation
             </Badge>
           </div>
           <p className="text-xs sm:text-sm text-muted-foreground">
-            Workspace: <strong className="text-foreground">Acme Corp</strong> (Tenant ID: <code className="text-xs font-mono">org_demo_01</code>)
+            {currentConfig.roleDescription}
           </p>
         </div>
-        <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm" className="text-xs">
-            Documentation
-          </Button>
-          <Button size="sm" className="text-xs">
-            Quick Actions
-          </Button>
+
+        {/* Role Perspective Selector */}
+        <div className="flex items-center gap-1.5 p-1 rounded-lg border border-border/60 bg-muted/30 self-start sm:self-auto">
+          <span className="text-[11px] font-medium text-muted-foreground px-2 hidden sm:inline">
+            View as:
+          </span>
+          {ROLES.map((r) => (
+            <button
+              key={r.id}
+              onClick={() => setRole(r.id)}
+              className={cn(
+                "px-2.5 py-1 text-xs rounded-md font-medium transition-all",
+                role === r.id
+                  ? "bg-primary text-primary-foreground shadow-sm font-semibold"
+                  : "text-muted-foreground hover:text-foreground hover:bg-muted"
+              )}
+            >
+              {r.label}
+            </button>
+          ))}
         </div>
       </div>
 
-      {/* Metric Cards Grid */}
+      {/* Work-Based Metrics Grid (No time tracking or surveillance) */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {METRIC_CARDS.map((metric) => {
-          const Icon = metric.icon;
+        {currentConfig.metrics.map((metric) => {
+          const Icon = getMetricIcon(metric.title);
           return (
             <Card key={metric.title} className="hover:border-primary/40 transition-colors">
               <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-                <CardTitle className="text-xs font-medium text-muted-foreground">
+                <CardTitle className="text-xs font-medium text-muted-foreground truncate mr-2">
                   {metric.title}
                 </CardTitle>
-                <div className="h-7 w-7 rounded-lg bg-muted flex items-center justify-center text-foreground">
+                <div className="h-7 w-7 rounded-lg bg-muted flex items-center justify-center text-foreground shrink-0">
                   <Icon className="h-3.5 w-3.5" />
                 </div>
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold tracking-tight">{metric.value}</div>
-                <p className="text-[11px] text-muted-foreground mt-1 flex items-center gap-1">
-                  <span>{metric.change}</span>
-                </p>
+                {metric.change && (
+                  <p
+                    className={cn(
+                      "text-[11px] mt-1 font-medium",
+                      metric.status === "destructive"
+                        ? "text-rose-500 dark:text-rose-400"
+                        : metric.status === "warning"
+                        ? "text-amber-500 dark:text-amber-400"
+                        : metric.status === "success"
+                        ? "text-emerald-500 dark:text-emerald-400"
+                        : "text-muted-foreground"
+                    )}
+                  >
+                    {metric.change}
+                  </p>
+                )}
               </CardContent>
             </Card>
           );
         })}
       </div>
 
-      {/* System Status & Upcoming Roadmap Grid */}
+      {/* Role-Specific Content Architecture */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Phase Foundation Status */}
-        <Card className="lg:col-span-2">
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <div>
-                <CardTitle className="text-base">System Architecture Status</CardTitle>
-                <CardDescription className="text-xs mt-1">
-                  Active core subsystems and multi-tenant readiness
+        {/* Priority Sections based on Role */}
+        <div className="lg:col-span-2 space-y-6">
+          {currentConfig.prioritySections.map((section) => (
+            <Card key={section.title}>
+              <CardHeader className="pb-3">
+                <div className="flex items-center justify-between">
+                  <CardTitle className="text-sm font-semibold">{section.title}</CardTitle>
+                  <span className="text-[11px] text-muted-foreground font-mono">
+                    {section.items.length} items
+                  </span>
+                </div>
+                <CardDescription className="text-xs">
+                  {section.description}
                 </CardDescription>
-              </div>
-              <Badge variant="success" className="text-xs">
-                Phase 0 Active
-              </Badge>
-            </div>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            <div className="flex items-start gap-3 p-3 rounded-lg border border-border/60 bg-muted/20">
-              <ShieldCheck className="h-5 w-5 text-emerald-500 shrink-0 mt-0.5" />
-              <div>
-                <h4 className="text-xs font-semibold text-foreground">Multi-Tenant RLS Ready</h4>
-                <p className="text-xs text-muted-foreground mt-0.5">
-                  Tenant boundary isolation configured for PostgreSQL. Client-supplied IDs will never be trusted.
-                </p>
-              </div>
-            </div>
+              </CardHeader>
+              <CardContent className="space-y-2.5">
+                {section.items.map((item) => (
+                  <div
+                    key={item.id}
+                    className="flex flex-col sm:flex-row sm:items-center justify-between p-3 rounded-lg border border-border/60 hover:border-primary/40 bg-card transition-all gap-2"
+                  >
+                    <div className="min-w-0">
+                      <p className="text-xs sm:text-sm font-medium text-foreground truncate">
+                        {item.title}
+                      </p>
+                      <p className="text-[11px] text-muted-foreground">
+                        <span className="font-mono">{item.id}</span> · {item.subtitle}
+                      </p>
+                    </div>
+                    <Badge variant={item.badgeVariant} className="text-[10px] self-start sm:self-auto shrink-0">
+                      {item.badge}
+                    </Badge>
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
+          ))}
+        </div>
 
-            <div className="flex items-start gap-3 p-3 rounded-lg border border-border/60 bg-muted/20">
-              <Building2 className="h-5 w-5 text-indigo-500 shrink-0 mt-0.5" />
-              <div>
-                <h4 className="text-xs font-semibold text-foreground">Three-Tier Role Hierarchy</h4>
-                <p className="text-xs text-muted-foreground mt-0.5">
-                  RBAC specifications established for Employee, Manager, and CEO/Admin roles.
-                </p>
+        {/* Workspace & Architecture Sidebar */}
+        <div className="space-y-6">
+          <Card>
+            <CardHeader className="pb-3">
+              <div className="flex items-center gap-2">
+                <Building2 className="h-4 w-4 text-muted-foreground" />
+                <CardTitle className="text-sm font-semibold">Tenant Context</CardTitle>
               </div>
-            </div>
-
-            <div className="flex items-start gap-3 p-3 rounded-lg border border-border/60 bg-muted/20">
-              <Sparkles className="h-5 w-5 text-amber-500 shrink-0 mt-0.5" />
-              <div>
-                <h4 className="text-xs font-semibold text-foreground">Next Phase Preparation</h4>
-                <p className="text-xs text-muted-foreground mt-0.5">
-                  Phase 1 will implement full Supabase Auth + Organization creation, member invitations, and password reset.
-                </p>
+              <CardDescription className="text-xs">
+                Active organization architecture
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-3 text-xs">
+              <div className="flex justify-between py-1.5 border-b border-border/50">
+                <span className="text-muted-foreground">Organization</span>
+                <span className="font-medium">{SEED_ORGANIZATION.name}</span>
               </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Quick Workspace Info */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-base">Workspace Details</CardTitle>
-            <CardDescription className="text-xs mt-1">
-              Active tenant configuration
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4 text-xs">
-            <div className="flex justify-between py-1 border-b border-border/50">
-              <span className="text-muted-foreground">Organization</span>
-              <span className="font-medium">Acme Corp</span>
-            </div>
-            <div className="flex justify-between py-1 border-b border-border/50">
-              <span className="text-muted-foreground">User Role</span>
-              <Badge variant="secondary" className="text-[10px] font-bold uppercase">
-                CEO
-              </Badge>
-            </div>
-            <div className="flex justify-between py-1 border-b border-border/50">
-              <span className="text-muted-foreground">Active Team</span>
-              <span className="font-medium">Engineering</span>
-            </div>
-            <div className="flex justify-between py-1 border-b border-border/50">
-              <span className="text-muted-foreground">Mobile Shell</span>
-              <span className="text-emerald-500 font-medium">360px+ Verified</span>
-            </div>
-            <div className="pt-2">
-              <Button variant="outline" size="sm" className="w-full text-xs" asChild>
-                <a href="/settings">Configure Workspace</a>
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
+              <div className="flex justify-between py-1.5 border-b border-border/50">
+                <span className="text-muted-foreground">Tenant Slug</span>
+                <code className="text-xs font-mono">{SEED_ORGANIZATION.slug}</code>
+              </div>
+              <div className="flex justify-between py-1.5 border-b border-border/50">
+                <span className="text-muted-foreground">Active Role View</span>
+                <Badge variant="secondary" className="text-[10px] font-bold uppercase">
+                  {role}
+                </Badge>
+              </div>
+              <div className="flex justify-between py-1.5 border-b border-border/50">
+                <span className="text-muted-foreground">Data Layer</span>
+                <span className="text-muted-foreground font-mono">Seed (DB-ready)</span>
+              </div>
+              <div className="pt-2">
+                <div className="flex items-center gap-2 p-2.5 rounded-lg border border-border/60 bg-muted/20 text-[11px] text-muted-foreground">
+                  <ShieldCheck className="h-4 w-4 text-emerald-500 shrink-0" />
+                  <span>Row Level Security prepared. Client tenant IDs never trusted.</span>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
       </div>
     </div>
   );

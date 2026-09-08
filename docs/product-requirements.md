@@ -4,6 +4,13 @@
 
 **TMS (Task & Team Management System)** is a modern, high-performance, multi-tenant B2B SaaS platform engineered for fast-moving product, engineering, and creative teams. It bridges the gap between high-level executive visibility and granular individual task execution through unified work tracking, team hierarchy management, contextual real-time collaboration, and actionable operational insights.
 
+### Core Product Principle: Work-First & Anti-Surveillance
+TMS intentionally **excludes** time tracking, timesheets, keystroke monitoring, or arbitrary capacity scores. All metrics reflect objective work deliverables:
+- Open vs. completed tasks
+- Tasks due this week and overdue items
+- Blocked work requiring team lead intervention
+- Project milestone health
+
 ---
 
 ## 2. Target Personas & Roles
@@ -11,7 +18,7 @@
 | Persona / Role | Core Needs | Primary Workflows | Key UI Touchpoints |
 | :--- | :--- | :--- | :--- |
 | **Employee (Member)** | Clear prioritization, low friction updates, distraction-free execution. | Viewing assigned tasks, updating status/blockers, team chat, personal daily focus. | *My Work*, *Chat*, *Project Board* |
-| **Manager (Team Lead)** | Capacity planning, bottleneck detection, cross-member coordination, team health. | Assigning tasks, sprint/milestone planning, reviewing deliverables, managing team members. | *Projects*, *People (Team view)*, *Insights*, *Chat* |
+| **Manager (Team Lead)** | Workload distribution, bottleneck detection, cross-member coordination, team health. | Assigning tasks, sprint/milestone planning, reviewing deliverables, unblocking teammates. | *Projects*, *People (Team view)*, *Insights*, *Chat* |
 | **CEO / Admin (Executive)** | Macro health metrics, cross-team alignment, organization settings, role governance. | Org-wide analytics, team creation, user invitation & role management, security audits. | *Insights (Org view)*, *People (Org directory)*, *Settings* |
 
 ---

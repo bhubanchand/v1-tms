@@ -7,59 +7,71 @@ import {
   Users,
   BarChart3,
   Settings,
-  Layers,
-  Sparkles,
-  ExternalLink,
   ChevronRight,
   ShieldCheck,
+  Shield,
 } from "lucide-react";
 import { Sidebar } from "@/components/layout/sidebar";
 import { Topbar } from "@/components/layout/topbar";
 import { BottomNav } from "@/components/layout/bottom-nav";
+import { CommandPalette } from "@/components/layout/command-palette";
 import { Sheet } from "@/components/ui/sheet";
 import { Badge } from "@/components/ui/badge";
 import { Avatar } from "@/components/ui/avatar";
+import { RoleProvider, useCurrentRole } from "@/components/providers/role-context";
 import { cn } from "@/lib/utils";
+import type { OrgRole } from "@/types";
 
-export function AppShell({ children }: { children: React.ReactNode }) {
+const MORE_ITEMS = [
+  {
+    title: "People & Directory",
+    description: "Organization roster and team structure",
+    href: "/people",
+    icon: Users,
+  },
+  {
+    title: "Insights & Velocity",
+    description: "Throughput metrics and milestone health",
+    href: "/insights",
+    icon: BarChart3,
+  },
+  {
+    title: "Workspace Settings",
+    description: "Manage teams, roles, and preferences",
+    href: "/settings",
+    icon: Settings,
+  },
+];
+
+function AppShellContent({ children }: { children: React.ReactNode }) {
   const [mobileDrawerOpen, setMobileDrawerOpen] = React.useState(false);
+  const [searchOpen, setSearchOpen] = React.useState(false);
   const pathname = usePathname();
+  const { role, setRole } = useCurrentRole();
 
   // Close drawer on route navigation
   React.useEffect(() => {
     setMobileDrawerOpen(false);
   }, [pathname]);
 
-  const MORE_ITEMS = [
-    {
-      title: "People & Directory",
-      description: "Organization roster and team structure",
-      href: "/people",
-      icon: Users,
-    },
-    {
-      title: "Insights & Velocity",
-      description: "Throughput metrics and milestone health",
-      href: "/insights",
-      icon: BarChart3,
-    },
-    {
-      title: "Workspace Settings",
-      description: "Manage teams, roles, and preferences",
-      href: "/settings",
-      icon: Settings,
-    },
+  const ROLES: { id: OrgRole; label: string }[] = [
+    { id: "employee", label: "Employee" },
+    { id: "manager", label: "Manager" },
+    { id: "ceo", label: "CEO / Admin" },
   ];
 
   return (
     <div className="flex min-h-screen bg-background text-foreground antialiased">
       {/* Desktop Sidebar (Persistent left rail, hidden on mobile) */}
-      <Sidebar />
+      <Sidebar role={role} />
 
       {/* Main Column */}
       <div className="flex-1 flex flex-col min-w-0">
         {/* Top Header */}
-        <Topbar onOpenMobileMenu={() => setMobileDrawerOpen(true)} />
+        <Topbar
+          onOpenMobileMenu={() => setMobileDrawerOpen(true)}
+          onOpenSearch={() => setSearchOpen(true)}
+        />
 
         {/* Dynamic Page Content with bottom padding for mobile navigation */}
         <main className="flex-1 p-4 sm:p-6 lg:p-8 pb-24 md:pb-8 max-w-7xl w-full mx-auto animate-in fade-in duration-200">
@@ -69,6 +81,13 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         {/* Mobile Bottom Navigation (Visible only on < 768px screens) */}
         <BottomNav onOpenMore={() => setMobileDrawerOpen(true)} />
       </div>
+
+      {/* Command Palette (Cmd+K) */}
+      <CommandPalette
+        open={searchOpen}
+        onOpenChange={setSearchOpen}
+        onSelectRole={setRole}
+      />
 
       {/* Mobile Drawer (More menu & Quick Actions) */}
       <Sheet
@@ -82,15 +101,43 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           {/* Active User Card in Drawer */}
           <div className="flex items-center justify-between p-3 rounded-xl border border-border/60 bg-muted/30">
             <div className="flex items-center gap-3">
-              <Avatar fallback="JD" className="h-9 w-9" />
+              <Avatar fallback={role === "ceo" ? "JD" : role === "manager" ? "AL" : "MV"} className="h-9 w-9" />
               <div>
-                <p className="text-xs font-semibold text-foreground">Jane Doe</p>
-                <p className="text-[11px] text-muted-foreground">jane@acme.inc</p>
+                <p className="text-xs font-semibold text-foreground">
+                  {role === "ceo" ? "Jane Doe" : role === "manager" ? "Alex Lee" : "Marcus Vance"}
+                </p>
+                <p className="text-[11px] text-muted-foreground">
+                  {role === "ceo" ? "jane@acme.inc" : role === "manager" ? "alex@acme.inc" : "marcus@acme.inc"}
+                </p>
               </div>
             </div>
             <Badge variant="secondary" className="text-[10px] font-bold uppercase">
-              CEO
+              {role}
             </Badge>
+          </div>
+
+          {/* Role Preview Switcher in Mobile Drawer */}
+          <div className="p-2.5 rounded-lg border border-border/60 bg-muted/20 space-y-1.5">
+            <div className="flex items-center gap-1.5 text-[11px] font-medium text-muted-foreground">
+              <Shield className="h-3.5 w-3.5" />
+              <span>Preview Role Perspective:</span>
+            </div>
+            <div className="grid grid-cols-3 gap-1">
+              {ROLES.map((r) => (
+                <button
+                  key={r.id}
+                  onClick={() => setRole(r.id)}
+                  className={cn(
+                    "px-2 py-1 text-[11px] rounded font-medium transition-all text-center",
+                    role === r.id
+                      ? "bg-primary text-primary-foreground font-semibold shadow-sm"
+                      : "bg-background text-muted-foreground hover:text-foreground"
+                  )}
+                >
+                  {r.label}
+                </button>
+              ))}
+            </div>
           </div>
 
           {/* Navigation Links */}
@@ -136,5 +183,13 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         </div>
       </Sheet>
     </div>
+  );
+}
+
+export function AppShell({ children }: { children: React.ReactNode }) {
+  return (
+    <RoleProvider initialRole="ceo">
+      <AppShellContent>{children}</AppShellContent>
+    </RoleProvider>
   );
 }

@@ -52,13 +52,14 @@ src/
 |   |-- globals.css               # Tailwind CSS theme variables & base styles
 |   `-- manifest.webmanifest      # PWA manifest
 |-- components/
-|   |-- layout/                   # App shell components (Sidebar, BottomNav, Topbar)
+|   |-- layout/                   # App shell components (Sidebar, BottomNav, Topbar, CommandPalette)
 |   |-- ui/                       # Reusable shadcn/ui primitives (Button, Card, etc.)
-|   `-- providers/                # Theme and session providers
+|   `-- providers/                # Theme and role perspective providers
 |-- lib/
 |   |-- supabase/                 # Supabase client & server factories
 |   |   |-- client.ts             # Browser client (createBrowserClient)
 |   |   `-- server.ts             # Server client (createServerClient)
+|   |-- seed-data.ts              # Structured seed data for role-aware development
 |   |-- utils.ts                  # Shared styling & utility helpers (cn)
 |   `-- constants.ts              # Navigation configuration, system constants
 `-- types/
@@ -110,3 +111,15 @@ The design system implements a mobile-first responsive architecture:
 - Configured `manifest.webmanifest` defining `standalone` display, app icons, theme color (`#09090b` dark, `#ffffff` light), and background color.
 - Viewport metadata configured with `viewportFit: "cover"` to utilize full edge-to-edge screen real estate on mobile devices.
 - Foundation prepared for future service worker offline asset caching.
+
+---
+
+## 7. Role-Aware Dashboard Architecture
+
+The dashboard supports role-specific content schemas powered by a unified interface:
+- **Employee**: Scoped strictly to personal work items (`My Tasks`, `Due Today`, `Overdue`, `Active Projects`, `Recent Activity`).
+- **Manager**: Scoped to team delivery health (`Team Tasks`, `Team Overdue Work`, `Blocked Work`, `Project Health`, `Team Activity`).
+- **CEO / Admin**: Scoped to organizational macro health (`Company-Level Work`, `Tasks Due This Week`, `Completed Tasks`, `Department & Project Health`, `Executive Milestones`).
+
+### Anti-Surveillance & Deliverable-Based Metrics
+TMS deliberately avoids time tracking, timesheets, keystroke monitoring, and arbitrary capacity scoring. All telemetry represents tangible work units (tasks created, completed, blocked, and milestones achieved). Seed data (`src/lib/seed-data.ts`) models this structure cleanly and is decoupled from production UI components, ensuring seamless transition to PostgreSQL queries in subsequent phases.

@@ -4,10 +4,10 @@ import { Badge } from "@/components/ui/badge";
 
 export default function InsightsPage() {
   const METRICS = [
-    { title: "Sprint Velocity", value: "48 pts", change: "+14% vs last sprint", icon: Zap },
-    { title: "Cycle Time", value: "2.4 days", change: "-0.6 days faster", icon: TrendingUp },
-    { title: "Completion Rate", value: "94.2%", change: "On track", icon: CheckCircle },
-    { title: "Stalled Tasks", value: "1", change: "Requires review", icon: AlertTriangle },
+    { title: "Points Delivered", value: "48 pts", change: "+14% vs last sprint", icon: Zap },
+    { title: "Milestone Completion", value: "94.2%", change: "On track", icon: CheckCircle },
+    { title: "Projects on Schedule", value: "5 of 6", change: "83% healthy", icon: TrendingUp },
+    { title: "Active Blockers", value: "2", change: "Requires review", icon: AlertTriangle },
   ];
 
   return (
@@ -19,7 +19,7 @@ export default function InsightsPage() {
             Insights & Velocity
           </h2>
           <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">
-            Operational telemetry, team workload, and delivery predictions.
+            Milestone progress, deliverable throughput, and project health.
           </p>
         </div>
         <Badge variant="outline" className="text-xs self-start sm:self-auto">

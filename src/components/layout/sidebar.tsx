@@ -13,12 +13,12 @@ import {
   Settings,
   Layers,
   ChevronDown,
-  Sparkles,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { MAIN_NAV_ITEMS, SECONDARY_NAV_ITEMS } from "@/lib/constants";
 import { Badge } from "@/components/ui/badge";
 import { Avatar } from "@/components/ui/avatar";
+import type { OrgRole } from "@/types";
 
 const ICON_MAP = {
   Home,
@@ -30,7 +30,7 @@ const ICON_MAP = {
   Settings,
 };
 
-export function Sidebar() {
+export function Sidebar({ role = "ceo" }: { role?: OrgRole }) {
   const pathname = usePathname();
 
   const isRouteActive = (href: string, matchExact?: boolean) => {
@@ -48,11 +48,11 @@ export function Sidebar() {
           </div>
           <div className="flex flex-col min-w-0">
             <span className="text-sm font-semibold truncate leading-tight">Acme Corp</span>
-            <span className="text-[11px] text-muted-foreground font-mono truncate">Engineering</span>
+            <span className="text-[11px] text-muted-foreground font-mono truncate">Workspace</span>
           </div>
         </div>
         <Badge variant="secondary" className="text-[10px] uppercase font-bold tracking-wider px-1.5 py-0.5">
-          CEO
+          {role}
         </Badge>
       </div>
 
@@ -140,17 +140,6 @@ export function Sidebar() {
               );
             })}
           </nav>
-        </div>
-
-        {/* AI System Callout Placeholder */}
-        <div className="mx-1 p-3 rounded-lg border border-border/70 bg-gradient-to-b from-muted/50 to-muted/20">
-          <div className="flex items-center gap-2 mb-1 text-xs font-semibold text-foreground">
-            <Sparkles className="h-3.5 w-3.5 text-amber-500 animate-pulse" />
-            <span>TMS Assistant</span>
-          </div>
-          <p className="text-[11px] text-muted-foreground leading-relaxed">
-            AI summaries & automated sprint insights coming in Phase 7.
-          </p>
         </div>
       </div>
 
