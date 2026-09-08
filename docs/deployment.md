@@ -3,8 +3,13 @@
 ## 1. Hosting Architecture
 
 TMS is optimized for cloud deployment with:
+- **Repository**: [github.com/bhubanchand/v1-tms](https://github.com/bhubanchand/v1-tms)
 - **Frontend & Edge API**: [Vercel](https://vercel.com) (Global Edge Network, Next.js native optimization)
 - **Database & Auth**: [Supabase](https://supabase.com) (Managed PostgreSQL, Auth, Realtime, Storage)
+
+### 1-Click Vercel Deployment
+Deploy the repository directly to Vercel:
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fbhubanchand%2Fv1-tms)
 
 ---
 
